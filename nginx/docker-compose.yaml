@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - WordPress:/var/www/html
+    ports:
+      - 8000:80
+    links:
+      - wordpress
+    networks:
+      - THE7OFDIAMONDS.TECH_SITES
+
+  php-fpm:
+    image: php:fpm
+    container_name: php-fpm
+    restart: unless-stopped
+    ports:
+      - '9000:9000'
+    networks:
+      - THE7OFDIAMONDS.TECH_SITES
+
+networks:
+  THE7OFDIAMONDS.TECH_SITES:
+    name: THE7OFDIAMONDS.TECH_SITES
