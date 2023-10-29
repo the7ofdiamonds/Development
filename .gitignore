@@ -1,6 +1,7 @@
+.DS_Store
 /.vs
 /.vscode
 /kubernetes
+/node
 /mysql
 /wordpress
-/node
