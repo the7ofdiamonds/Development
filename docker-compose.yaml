@@ -5,7 +5,7 @@ services:
   db:
     image: mariadb
     volumes:
-      - MySQL:/var/lib/mysql
+      - mysql:/var/lib/mysql
     restart: always
     ports:
       - "3306:3306"
@@ -13,45 +13,45 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: wordpress
     networks:
-      - THE7OFDIAMONDS.TECH_SITES
+      - the7ofdiamonds.tech_sites
 
-  # Wordpress
-  wordpress:
+  php-fpm:
+    build:
+      context: .
+    container_name: php-fpm
+    restart: unless-stopped
+    ports:
+      - '9000:9000'
+    networks:
+      - the7ofdiamonds.tech_sites
+    volumes:
+          - ./wordpress:/var/www/wordpress
+
+  nginx-wordpress:
     depends_on:
       - db
-    image: wordpress:php8.1-fpm-alpine
+      - php-fpm
+    image: nginx-wordpress
     restart: always
     volumes:
-      - ./wordPress:/var/www/html
-      - ./wordpress/wp-content:/var/www/html/wp-content
-      - ./wordpress:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./wordpress:/var/www/wordpress
+    ports:
+      - 8000:80
+      - 443:443
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: password
-    links:
-      - db
     networks:
-      - THE7OFDIAMONDS.TECH_SITES
-
-  nginx:
-    image: nginx
-    restart: always
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./wordpress:/var/www/html
-      - ./wordpress/wp-content:/var/www/html/wp-content
-    ports:
-      - 8000:80
-    links:
-      - wordpress
-    networks:
-      - THE7OFDIAMONDS.TECH_SITES
+      - the7ofdiamonds.tech_sites
 
 networks:
-  THE7OFDIAMONDS.TECH_SITES:
-    name: THE7OFDIAMONDS.TECH_SITES
+  the7ofdiamonds.tech_sites:
+    name: the7ofdiamonds.tech_sites
+
 volumes:
-  MySQL:
-  WordPress:
+  mysql:
+  wordpress:

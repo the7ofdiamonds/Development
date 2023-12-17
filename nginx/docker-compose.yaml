@@ -1,24 +1,16 @@
 version: '3'
 
 services:
-  nginx:
-    image: nginx:alpine
+  nginx-wordpress:
+    build:
+      context: .
+    image: nginx-wordpress
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - WordPress:/var/www/html
+      - ./conf.d:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
+      - ../wordpress:/var/www/wordpress
     ports:
       - 8000:80
-    links:
-      - wordpress
-    networks:
-      - THE7OFDIAMONDS.TECH_SITES
-
-  php-fpm:
-    image: php:fpm
-    container_name: php-fpm
-    restart: unless-stopped
-    ports:
-      - '9000:9000'
     networks:
       - THE7OFDIAMONDS.TECH_SITES
 
