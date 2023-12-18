@@ -3,7 +3,14 @@
 /.vscode
 /kubernetes
 /node
+/java
 /mysql
-/wordpress
+/wordpress/wp-admin
+/wordpress/wp-content
+/wordpress/wp-includes
+/wordpress/.htaccess
+/wordpress/*.txt
+/wordpress/*.html
+/wordpress/*.php
 /nginx/ssl/certs/*
 /nginx/ssl/private/*
