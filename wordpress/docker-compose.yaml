@@ -16,7 +16,6 @@ services:
       - the7ofdiamonds.tech_sites
 
   php-fpm:
-    container_name: php-fpm
     build:
       context: .
     restart: unless-stopped
@@ -28,8 +27,9 @@ services:
       - ./:/var/www/wordpress
 
   nginx-wordpress:
+    container_name: the7ofdiamonds.development
     depends_on:
-      - sql-dbdb
+      - sql-db
       - php-fpm
     build:
       context: ../nginx
@@ -49,7 +49,7 @@ services:
       - "8000:80"
       - "443:443"
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: sql-db
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: password

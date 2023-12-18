@@ -1,0 +1,2 @@
+2023/12/18 16:54:37 [warn] 1#1: server name "https://www.the7ofdiamonds.development" has suspicious symbols in /etc/nginx/sites-enabled/index.conf:20
+2023/12/18 16:54:37 [warn] 1#1: server name "https://the7ofdiamonds.development" has suspicious symbols in /etc/nginx/sites-enabled/index.conf:20
