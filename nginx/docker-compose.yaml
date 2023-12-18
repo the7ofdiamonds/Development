@@ -1,19 +1,65 @@
 version: '3'
 
 services:
-  nginx-wordpress:
+  # Database
+  db:
+    image: mariadb
+    volumes:
+      - mysql:/var/lib/mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+    networks:
+      - the7ofdiamonds.tech_sites
+
+  php-fpm:
+    container_name: php-fpm
     build:
       context: .
-    image: nginx-wordpress
-    volumes:
-      - ./conf.d:/etc/nginx/conf.d
-      - ./ssl:/etc/nginx/ssl
-      - ../wordpress:/var/www/wordpress
+    restart: unless-stopped
     ports:
-      - 8000:80
+      - '9000:9000'
     networks:
-      - THE7OFDIAMONDS.TECH_SITES
+      - the7ofdiamonds.tech_sites
+    volumes:
+      - ./wordpress:/var/www/wordpress
+
+  nginx-wordpress:
+    depends_on:
+      - db
+      - php-fpm
+    build:
+      context: ./nginx
+    restart: always
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/wordpress.conf:/etc/nginx/wordpress.conf
+      - ./nginx/sites-available:/etc/nginx/sites-available
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/ssl/certs/dhparam.pem:/etc/ssl/certs/dhparam.pem
+      - ./nginx/ssl/certs/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
+      - ./nginx/ssl/private/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
+      - ./nginx/snippets/self-signed.conf:/etc/nginx/snippets/self-signed.conf
+      - ./nginx/snippets/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
+      - ./wordpress:/var/www/wordpress
+    ports:
+      - "8000:80"
+      - "443:443"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+    networks:
+      - the7ofdiamonds.tech_sites
 
 networks:
-  THE7OFDIAMONDS.TECH_SITES:
-    name: THE7OFDIAMONDS.TECH_SITES
+  the7ofdiamonds.tech_sites:
+    name: the7ofdiamonds.tech_sites
+
+volumes:
+  mysql:
+  wordpress:
