@@ -2,7 +2,7 @@ version: '3'
 
 services:
   # Database
-  sql-db:
+  mysql-db:
     image: mariadb
     volumes:
       - ../mysql:/var/lib/mysql
@@ -10,34 +10,21 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     networks:
       - the7ofdiamonds.tech_sites
 
-  php-fpm:
+  php:
+    container_name: php
     build:
-      context: .
+      context: ../php
     restart: unless-stopped
-    ports:
-      - '9000:9000'
-    networks:
-      - the7ofdiamonds.tech_sites
-    volumes:
-      - ./:/var/www/wordpress
-
-  nginx-wordpress:
-    container_name: the7ofdiamonds.development
     depends_on:
-      - sql-db
-      - php-fpm
-    build:
-      context: ../nginx
-    restart: always
+    - mysql-db
     volumes:
-      - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - ../nginx/wordpress.conf:/etc/nginx/wordpress.conf
-      - ../nginx/sites-available:/etc/nginx/sites-available
       - ../nginx/logs:/var/log/nginx
       - ../nginx/ssl/certs/dhparam.pem:/etc/ssl/certs/dhparam.pem
       - ../nginx/ssl/certs/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
@@ -45,14 +32,28 @@ services:
       - ../nginx/snippets/self-signed.conf:/etc/nginx/snippets/self-signed.conf
       - ../nginx/snippets/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
       - ./:/var/www/wordpress
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    ports:
+      - "9000:9000"
+    networks:
+      - the7ofdiamonds.tech_sites
+
+  nginx:
+    container_name: the7ofdiamonds.development
+    build:
+      context: ../nginx
+      dockerfile: WordPress.Dockerfile
+    restart: always
     ports:
       - "8000:80"
       - "443:443"
-    environment:
-      WORDPRESS_DB_HOST: sql-db
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DB_USER: root
-      WORDPRESS_DB_PASSWORD: password
+    volumes:
+      - ./:/var/www/wordpress
+
     networks:
       - the7ofdiamonds.tech_sites
 

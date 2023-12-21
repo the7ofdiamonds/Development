@@ -1,0 +1,31 @@
+# Use the official PHP image
+FROM php:8.2-fpm
+# Install required packages
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y wget postgresql-client unzip libzip-dev git
+
+# Install the zip extension for PHP
+RUN docker-php-ext-install zip
+
+# Install Composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    rm composer-setup.php
+
+WORKDIR /var/www
+
+RUN wget https://wordpress.org/latest.tar.gz && \
+    tar -xzvf latest.tar.gz && \
+    rm latest.tar.gz && \
+    chown -R www-data:www-data /var/www/wordpress
+
+WORKDIR /var/www/wordpress
+
+# Run "composer install" to install dependencies
+RUN composer require vlucas/phpdotenv
+
+# Install the MySQLi extension
+RUN docker-php-ext-install mysqli
+
+CMD ["php-fpm"]
