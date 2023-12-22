@@ -3,7 +3,7 @@ FROM php:8.2-fpm
 # Install required packages
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y wget postgresql-client unzip libzip-dev git
+    apt-get install -y wget postgresql-client unzip libzip-dev git libpq-dev && docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql 
 
 # Install the zip extension for PHP
 RUN docker-php-ext-install zip
@@ -24,8 +24,5 @@ WORKDIR /var/www/wordpress
 
 # Run "composer install" to install dependencies
 RUN composer require vlucas/phpdotenv
-
-# Install the MySQLi extension
-RUN docker-php-ext-install mysqli
 
 CMD ["php-fpm"]
