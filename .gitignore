@@ -5,6 +5,8 @@
 /node
 /java
 /mysql
+/nginx/ssl/certs/*
+/nginx/ssl/private/*
 /wordpress/wp-admin
 /wordpress/wp-content
 /wordpress/wp-includes
@@ -12,5 +14,4 @@
 /wordpress/*.txt
 /wordpress/*.html
 /wordpress/*.php
-/nginx/ssl/certs/*
-/nginx/ssl/private/*
+/wordpress/.env
