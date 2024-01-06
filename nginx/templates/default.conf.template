@@ -1,0 +1,33 @@
+upstream php {
+    server unix:/tmp/php-cgi.socket;
+    server php:${PHP_PORT};
+}
+
+server {
+    listen 80 default_server;
+    server_name _;
+    return 404;
+}
+
+server {
+    listen 80;
+    server_name ${SERVER_NAME_ONE};
+
+    include /etc/nginx/templates/wordpress.conf;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name ${SERVER_NAME_ONE};
+
+    include /etc/nginx/templates/wordpress.conf;
+
+    ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+    include snippets/self-signed.conf;
+    include snippets/ssl-params.conf;
+
+    add_header Strict-Transport-Security "max-age=3600; includeSubDomains; preload" always;
+}

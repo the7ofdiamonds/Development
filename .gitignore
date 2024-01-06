@@ -7,11 +7,5 @@
 /mysql
 /nginx/ssl/certs/*
 /nginx/ssl/private/*
-/wordpress/wp-admin
-/wordpress/wp-content
-/wordpress/wp-includes
-/wordpress/.htaccess
-/wordpress/*.txt
-/wordpress/*.html
-/wordpress/*.php
-/wordpress/.env
+/wordpress/
+.env
