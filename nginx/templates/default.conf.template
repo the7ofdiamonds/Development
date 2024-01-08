@@ -2,11 +2,11 @@ upstream php {
     server php:${PHP_PORT};
 }
 
-map $uri $blogname{
-    ~^(?P<blogpath>/[^/]+/)files/(.*)       $blogpath ;
+map $uri $blogname {
+    ~^(?P<blogpath>/[^/]+/)files/(.*) $blogpath ;
 }
 
-map $blogname $blogid{
+map $blogname $blogid {
     default -999;
 }
 
@@ -26,6 +26,25 @@ server {
 server {
     listen 443 ssl;
     server_name ${DOMAIN_ONE};
+
+    location /${SUBDIRECTORY_NAME} {
+        return 301 https://${DOMAIN_TWO}$1;
+    }
+
+    include /etc/nginx/wordpress.conf;
+    include /etc/nginx/secure.conf;
+}
+
+server {
+    listen 80;
+    server_name ${DOMAIN_TWO};
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name ${DOMAIN_TWO};
 
     include /etc/nginx/wordpress.conf;
     include /etc/nginx/secure.conf;
