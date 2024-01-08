@@ -5,6 +5,7 @@
 /node
 /java
 /mysql
+/nginx/logs/*
 /nginx/ssl/certs/*
 /nginx/ssl/private/*
 /wordpress/
