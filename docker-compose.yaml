@@ -77,6 +77,7 @@ services:
 networks:
   the7ofdiamonds.tech_sites:
     name: the7ofdiamonds.tech_sites
+    external: true
 
   api.orbfin.tech:
     name: api.orbfin.tech
