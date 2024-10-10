@@ -8,5 +8,5 @@
 /nginx/logs/*
 /nginx/ssl/certs/*
 /nginx/ssl/private/*
-/wordpress/
+/php/wordpress/
 .env

@@ -3,36 +3,37 @@ version: '3'
 services:      
   mysql:
     container_name: mysql-db
-    image: mariadb
+    image: mysql:latest
     volumes:
-      - ./mysql:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     restart: always
     ports:
-      - ${MYSQL_PORT}:${MYSQL_PORT}
+      - ${MYSQL_PORT}:3306
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     networks:
       - the7ofdiamonds.tech_sites
+      - api.orbfin.tech
 
   php:
     container_name: php
-    image: php:8.2-fpm
     build:
       context: ./php
     restart: always
     depends_on:
       - mysql
     ports:
-      - ${PHP_PORT}:${PHP_PORT}
+      - ${PHP_PORT}:9000
     volumes:
       - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf
-      - ./wordpress:/var/www/wordpress
+      - ./php/wordpress:/var/www/wordpress
+      - ./php/wordpress/wp-content/debug.log:/var/log/debug.log
     networks:
       - the7ofdiamonds.tech_sites
       - api.orbfin.tech
     environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_HOST: mysql-db
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
       WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
@@ -68,7 +69,7 @@ services:
       - ./nginx/ssl/private/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
       - ./nginx/snippets/self-signed.conf:/etc/nginx/snippets/self-signed.conf
       - ./nginx/snippets/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
-      - ./wordpress:/var/www/wordpress
+      - ./php/wordpress:/var/www/wordpress
     networks:
       - the7ofdiamonds.tech_sites
       - api.orbfin.tech
@@ -84,6 +85,6 @@ networks:
     external: true
     
 volumes:
-  mysql:
+  mysql_data:
   wordpress:
   pgdata:

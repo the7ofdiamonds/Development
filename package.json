@@ -1,0 +1,23 @@
+{
+    "author": "Jamel C. Lyons <jclyonsenterprises@gmail.com>, THE7OFDIAMONDS.TECH",
+    "license": "ISC",
+    "name": "development",
+    "version": "1.0.0",
+    "description": "Development Environment",
+    "main": "src/index.js",
+    "scripts": {
+      "build": "docker compose up --build",
+      "start": "browser-sync start --config browsersync.config.js",
+      "start-wordpress": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content",
+      "start-gateway": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content/plugins/seven-tech-gateway",
+      "start-portfolio": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content/plugins/seven-tech-portfolio",
+      "start-schedule": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content/plugins/seven-tech-schedule",
+      "start-communications": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content/plugins/seven-tech-communications",
+      "start-services": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content/plugins/orb-products-services",
+      "start-real-estate": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content/plugins/orb-real-estate",
+      "start-accounts": "code /Users/jamellyons/Documents/J_C_LYONS_ENTERPRISES_LLC/THE7OFDIAMONDS.TECH/Development/php/wordpress/wp-content/plugins/orb-accounts",
+      "push-github": "git push development",
+      "docker": "open -g -a Docker",
+      "env": "docker compose up -d && npm run start"
+    }
+}
